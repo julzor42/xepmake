@@ -1,0 +1,33 @@
+<Framework>
+	<Description Name="Core32" />
+	<DataFiles>
+		<DataFile Name="core32conf.h" Language="C">
+			<Field Name="SYSTEM_FREQ" Default="80000000L" Comment="System clock frequency" />
+			<Field Name="SYSTEM_PBDIV" Default="2" Comment="Peripheral clock divider" />
+		</DataFile>
+	</DataFiles>
+	<Repositories>
+		<Repository Type="git" Address="julzor42/core32" Output="$(WORK)/ext/core32" />
+	</Repositories>
+	<Defines>
+		<Define Name="FRAMEWORK_CORE32" />
+	</Defines>
+	<Include BaseDirectory="$(WORK)/ext/core32/inc">
+		<Directory Path="" />
+	</Include>
+	<Source BaseDirectory="$(WORK)/ext/core32/src">
+		<File Path="adc.c" />
+		<File Path="cn.c" />
+		<File Path="dma.c" />
+		<File Path="extint.c" />
+		<File Path="i2c.c" />
+		<File Path="nvm.c" />
+		<File Path="oc.c" />
+		<File Path="spi.c" />
+		<File Path="sysmain.c" />
+		<File Path="system.c" />
+		<File Path="tasks.c" />
+		<File Path="timers.c" />
+		<File Path="uart.c" />
+	</Source>
+</Framework>

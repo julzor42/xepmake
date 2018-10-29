@@ -1,0 +1,14 @@
+	<Driver>
+	<Description Name="MIDI" />
+	<Include BaseDirectory="$(WORK)/ext/core32/drivers">
+		<Directory Path="" />
+		<Directory Path="midi" />
+		<Directory Path="midi/ext" />
+	</Include>
+	<Defines>
+		<Define Name="DRIVER_CORE32_MIDI" />
+	</Defines>	
+	<Source BaseDirectory="$(WORK)/ext/core32/drivers/midi">
+		<File Path="midi.c" />
+	</Source>
+</Driver>

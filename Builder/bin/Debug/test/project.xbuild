@@ -1,0 +1,12 @@
+<C32Project>
+	<Description Name="Project1" Framework="core32" Board="Olimex-T795" Binary="hello" OutputDirectory="Output" Toolset="xc32" />
+	<Drivers>
+		<!--<Driver Type="MIDI" />-->
+	</Drivers>
+	<Include>
+		<Directory Path="../hello" />
+	</Include>
+	<Source BaseDirectory="src">
+		<File Path="test.c" />
+	</Source>
+</C32Project>

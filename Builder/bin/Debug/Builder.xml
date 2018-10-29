@@ -1,0 +1,7 @@
+<Builder>
+	<Paths>
+		<Git>C:\Program Files\Git\bin</Git>
+		<Make>data\bin</Make>
+		<Toolset.xc32>C:\Program Files (x86)\Microchip\xc32\v1.44\bin</Toolset.xc32>
+	</Paths>
+</Builder>

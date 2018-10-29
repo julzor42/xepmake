@@ -1,0 +1,51 @@
+<Toolset>
+	<Description Name="xc32" />
+	<Tools>
+		<Tool Name="CC" Binary="xc32-gcc" />
+		<Tool Name="LD" Binary="xc32-ld" />
+		<Tool Name="BIN2HEX" Binary="xc32-bin2hex" />
+	</Tools>
+	<Defines>
+		<Define Name="TOOLSET_XC32" />
+		<Define Name="CORE32_HOST_LINUX" Platform="unix" />
+		<Define Name="CORE32_HOST_WINDOWS" Platform="win32nt" />
+	</Defines>
+	<Rules>
+		<!-- Windows rules -->
+		<Rule Name="all" Depends="$(OBJ)" Platform="win32nt">
+			@if not exist "$(OUTDIR)" md "$(OUTDIR)"
+			$(CC) -o $(OUTDIR)/$(NAME).bin $(OBJ) $(LDFLAGS)
+			$(BIN2HEX) $(OUTDIR)/$(NAME).bin
+		</Rule>
+		<Rule Name="clean" Platform="win32nt">
+			rmdir /s /q $(OBJDIR)
+		</Rule>
+		<Rule Name="fclean" Depends="clean" Platform="win32nt">
+			del $(OUTDIR)/$(NAME).bin
+			del $(OUTDIR)/$(NAME).hex
+		</Rule>
+		<Rule Name="$(OBJDIR)/%.o" Depends="%.c" Platform="win32nt">
+			@if not exist "$(dir $@)" md "$(dir $@)"
+			$(CC) -no-integrated-cpp -B$(ROOT)\data\bin $(CFLAGS) -o $@ -c $&lt;
+		</Rule>
+		<!-- Unix rules -->
+		<Rule Name="all" Depends="$(OBJ)" Platform="unix">
+			mkdir -p $(OUTDIR)
+			$(CC) -o $(OUTDIR)/$(NAME).bin $(OBJ) $(LDFLAGS)
+			$(BIN2HEX) $(OUTDIR)/$(NAME).bin
+		</Rule>
+		<Rule Name="clean" Platform="unix">
+			rm -f $(OBJ)
+			rm -rf $(OBJDIR)
+		</Rule>
+		<Rule Name="fclean" Depends="clean" Platform="unix">
+			rm -f $(OUTDIR)/$(NAME).bin
+			rm -f $(OUTDIR)/$(NAME).hex
+		</Rule>
+		<Rule Name="$(OBJDIR)/%.o" Depends="%.c" Platform="unix">
+			mkdir -p $(dir $@)
+			$(CC) -no-integrated-cpp -Bdata/bin $(CFLAGS) -o $@ -c $&lt;
+		</Rule>
+		<Rule Name="re" Depends="fclean all" />
+	</Rules>
+</Toolset>

@@ -1,0 +1,20 @@
+<Processor>
+	<Description Name="PIC32MX795F512H" Family="PIC32MX7" Device="795" Type="512H" />
+	<Defines>
+		<Define Name="CPU_PIC32MX795F512H" />
+	</Defines>
+	<Ports>
+		<Port Name="UART1" Type="UART" />
+		<Port Name="UART2" Type="UART" />
+		<Port Name="UART3" Type="UART" />
+		<Port Name="UART4" Type="UART" />
+		<Port Name="UART5" Type="UART" />
+		<Port Name="UART6" Type="UART" />
+		<Port Name="PORTA" Type="GPIO" />
+		<Port Name="PORTB" Type="GPIO" />
+		<Port Name="PORTC" Type="GPIO" />
+		<Port Name="PORTD" Type="GPIO" />
+		<Port Name="PORTE" Type="GPIO" />
+		<Port Name="PORTF" Type="GPIO" />
+	</Ports>
+</Processor>

@@ -1,0 +1,13 @@
+<Connector>
+	<Description Name="UEXT" />
+	<Pin Name="GND" Port="Power" />
+	<Pin Name="VCC" Port="Power" />
+	<Pin Name="URX" Port="UART" />
+	<Pin Name="UTX" Port="UART" />
+	<Pin Name="MISO" Port="SPI" />
+	<Pin Name="MOSI" Port="SPI" />
+	<Pin Name="SCK" Port="SPI" />
+	<Pin Name="CS" Port="SPI" />
+	<Pin Name="SDA" Port="I2C" />
+	<Pin Name="SCL" Port="I2C" />
+</Connector>

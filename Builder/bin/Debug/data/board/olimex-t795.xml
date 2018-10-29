@@ -1,0 +1,19 @@
+<Board>
+	<Description Name="Olimex-T795" Processor="PIC32MX795F512H" />
+	<Defines>
+		<Define Name="BOARD_OLIMEX_T795" />
+	</Defines>
+	<Connectors>
+		<Connector Type="UEXT" Name="UEXT1">
+			<Ports>
+				<Port Name="UART" Id="2" />
+			</Ports>
+		</Connector>
+		<Connector Type="Header" Name="CON1">
+			<Pin Name="GND" />
+		</Connector>
+		<Connector Type="Header" Name="CON2">
+			<Pin Name="GND" />
+		</Connector>
+	</Connectors>
+</Board>

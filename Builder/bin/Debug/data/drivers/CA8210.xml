@@ -1,0 +1,14 @@
+<Driver>
+	<Description Name="CA8210" />
+	<Include BaseDirectory="data/core32/drivers">
+		<Directory Path="" />
+		<Directory Path="ca8210" />
+		<Directory Path="ca8210/ext" />
+	</Include>
+	<Defines>
+		<Define Name="DRIVER_CORE32_CA8210" />
+	</Defines>	
+	<Source BaseDirectory="data/core32/drivers/ca8210">
+		<File Path="ca8210.c" />
+	</Source>
+</Driver>
