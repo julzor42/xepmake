@@ -5,38 +5,38 @@ using System.IO;
 
 namespace Builder
 {
-  public static class RepositoryResolver
-  {
-    static void ResolveRepo(Descriptor desc)
+    public static class RepositoryResolver
     {
-      if (desc.Repositories == null)
-        return;
-
-      foreach (var repo in desc.Repositories)
-      {
-        switch (repo.Type.ToLower())
+        static void ResolveRepo(Descriptor desc)
         {
-          case "git":
-            Git git = new Git { Address = repo.Address, Output = Catalog.ParsePath(repo.Output) };
+            if (desc.Repositories == null)
+                return;
 
-            if (!Directory.Exists(git.Output)) git.Clone();
-            else if (Program.Config.Upgrade) git.Pull();
-            break;
+            foreach (var repo in desc.Repositories)
+            {
+                switch (repo.Type.ToLower())
+                {
+                    case "git":
+                        Git git = new Git { Address = repo.Address, Output = Catalog.ParsePath(repo.Output) };
+
+                        if (!Directory.Exists(git.Output)) git.Clone();
+                        else if (Program.Config.Upgrade) git.Pull();
+                        break;
+                }
+
+            }
         }
 
-      }
-    }
+        public static void ResolveForProject(Project project)
+        {
+            ResolveRepo(project);
+            ResolveRepo(project.Framework);
+            ResolveRepo(project.Board);
+            ResolveRepo(project.Board.Processor);
+            ResolveRepo(project.Toolset);
 
-    public static void ResolveForProject(Project project)
-    {
-      ResolveRepo(project);
-      ResolveRepo(project.Framework);
-      ResolveRepo(project.Board);
-      ResolveRepo(project.Board.Processor);
-      ResolveRepo(project.Toolset);
-
-      foreach (var drv in project.Drivers)
-        ResolveRepo(drv.Source);
+            foreach (var drv in project.Drivers)
+                ResolveRepo(drv.Source);
+        }
     }
-  }
 }

@@ -2,15 +2,15 @@
 
 namespace Builder.Astralis.Execution
 {
-  public class Make : Executor
-  {
-    #region Constructor
-    public Make()
+    public class Make : Executor
     {
-      BinaryPath = Program.Config.GetPath("Make");
-      FileName = "make";
-      LogClass = "Make";
+        #region Constructor
+        public Make()
+        {
+            BinaryPath = Program.Config.GetPath("Make");
+            FileName = "make";
+            LogClass = "Make";
+        }
+        #endregion
     }
-    #endregion
-  }
 }
