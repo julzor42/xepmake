@@ -1,5 +1,5 @@
 <Toolset>
-	<Description Name="xc32" />
+	<Description Name="xc32-extended" />
 	<Tools>
 		<Tool Name="CC" Binary="xc32-gcc" />
 		<Tool Name="LD" Binary="xc32-ld" />

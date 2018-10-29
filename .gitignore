@@ -4,3 +4,7 @@
 
 /.vs
 **/obj
+*.pdb
+*.dll
+**/ext
+**/gen

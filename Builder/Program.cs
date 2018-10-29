@@ -31,7 +31,7 @@ namespace Builder
             try
             {
                 Log("Loading data...");
-                Catalog.DataDirectory = Path.Combine(AppPath, "data");
+                Catalog.DataDirectory = Config.GetPath("Data") ?? Path.Combine(AppPath, "data");
                 Catalog.WorkDirectory = "build";
                 Catalog.Initialize();
 
