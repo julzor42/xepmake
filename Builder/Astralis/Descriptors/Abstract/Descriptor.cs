@@ -19,7 +19,7 @@ namespace Builder.Astralis.Descriptors
 
         #region Properties
         public XDocument Document { get; private set; }
-        public string Name => DescAttribute("Name");
+        public string Name => DescriptionAttribute("Name");
         public IEnumerable<Definition> Definitions => Elements("Defines", "Define")?.Select(x => new Definition(x)).Where(x => x.PlatformMatch);
         public IEnumerable<Repository> Repositories => Elements("Repositories", "Repository")?.Select(x => new Repository(x)).Where(x => x.PlatformMatch);
         #endregion
@@ -29,9 +29,9 @@ namespace Builder.Astralis.Descriptors
         public IEnumerable<XElement> Elements(string ElementName, string TypeName) => Element(ElementName)?.Elements(TypeName);
         public IEnumerable<XElement> Elements(string ElementName) => Element(ElementName)?.Elements();
         public string Attribute(string ElementName, string AttributeName) => Element(ElementName)?.Attribute(AttributeName)?.Value ?? string.Empty;
-        public string DescAttribute(string AttributeName) => Attribute("Description", AttributeName);
-        public string DescItem(string ItemName) => Element("Description")?.Element(ItemName)?.Value ?? string.Empty;
-        public string DescItemAttr(string ItemName, string AttributeName) => Element("Description")?.Element(ItemName)?.Attribute(AttributeName)?.Value ?? string.Empty;
+        public string DescriptionAttribute(string AttributeName) => Attribute("Description", AttributeName);
+        public string DescriptionItem(string ItemName) => Element("Description")?.Element(ItemName)?.Value ?? string.Empty;
+        public string DescriptionItemAttribute(string ItemName, string AttributeName) => Element("Description")?.Element(ItemName)?.Attribute(AttributeName)?.Value ?? string.Empty;
         #endregion
 
         #region Virtual methods

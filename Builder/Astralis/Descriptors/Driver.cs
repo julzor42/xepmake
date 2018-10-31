@@ -1,4 +1,7 @@
-﻿namespace Builder.Astralis.Descriptors
+﻿using Builder.Astralis.Generators;
+using System.Linq;
+
+namespace Builder.Astralis.Descriptors
 {
     public class Driver : SourceDescriptor
     {

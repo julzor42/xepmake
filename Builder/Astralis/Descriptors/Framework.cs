@@ -1,4 +1,6 @@
-﻿namespace Builder.Astralis.Descriptors
+﻿using Builder.Astralis.Generators;
+
+namespace Builder.Astralis.Descriptors
 {
     public class Framework : SourceDescriptor
     {

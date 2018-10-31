@@ -1,5 +1,7 @@
-﻿using Builder.Astralis.Descriptors;
+﻿using Builder.Astralis.Blocks;
+using Builder.Astralis.Descriptors;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -11,8 +13,9 @@ namespace Builder.Astralis.Generators
         #region Properties
         public Project Project { get; }
         public StringBuilder Builder { get; private set; }
-        public StringBuilder ExtBuilder { get; private set; }
+        public StringBuilder ExternalBuilder { get; private set; }
         public bool UseExternalMakefile { get; set; } = false;
+        public List<IMakefileBlock> Blocks { get; } = new List<IMakefileBlock>();
         #endregion
 
         #region Constructor
@@ -22,11 +25,25 @@ namespace Builder.Astralis.Generators
         }
         #endregion
 
+        #region Builders
+        void AddBuilder<T>() where T : IMakefileBlock, new() => Blocks.Add(new T());
+        T GetBuilder<T>() where T : class, IMakefileBlock => Blocks.FirstOrDefault(x => x.GetType() == typeof(T)) as T;
+        T GetBuilder<T>(string name) where T : class, IMakefileBlock => Blocks.FirstOrDefault(x => x.BuilderName == name) as T;
+        #endregion
+
         #region Methods
         public void Generate()
         {
+            if (Blocks.Count == 0)
+            {
+                AddBuilder<ToolsetBlock>();
+                AddBuilder<FrameworkBlock>();
+                AddBuilder<DriverBlock>();
+                AddBuilder<ExternalSourcesBlock>();
+            }
+
             Builder = new StringBuilder();
-            ExtBuilder = UseExternalMakefile ? new StringBuilder() : Builder;
+            ExternalBuilder = UseExternalMakefile ? new StringBuilder() : Builder;
 
             AppendHeaders();
 
@@ -38,24 +55,19 @@ namespace Builder.Astralis.Generators
 
             AppendVariables();
             AppendSourceFiles(Project);
-            AppendToolset();
-            AppendFramework();
-            AppendDrivers();
-            AppendExtendedSources();
+            Blocks.ForEach(block => block.Process(this));
             AppendIncludes(Project);
 
             AppendDefinitions();
 
-            ExtBuilder.AppendLine();
-            ExtBuilder.AppendLine("# Automatically generated files");
+            ExternalBuilder.AppendLine();
+            ExternalBuilder.AppendLine("# Automatically generated files");
             AppendDataFiles(Project);
             AppendDataFiles(Project.Framework);
 
             AppendLibraries();
             AppendRules();
         }
-
-
 
         #region Generation
         void AppendHeaders()
@@ -64,8 +76,8 @@ namespace Builder.Astralis.Generators
 
             if (UseExternalMakefile)
             {
-                ExtBuilder.AppendLine($"# This file was generated automatically on {now.ToShortDateString()} {now.ToShortTimeString()}");
-                ExtBuilder.AppendLine($"# Tools configuration for project {Project.Name}");
+                ExternalBuilder.AppendLine($"# This file was generated automatically on {now.ToShortDateString()} {now.ToShortTimeString()}");
+                ExternalBuilder.AppendLine($"# Tools configuration for project {Project.Name}");
             }
 
             // Header
@@ -89,34 +101,9 @@ namespace Builder.Astralis.Generators
             Builder.AppendLine($"NAME={Project.Binary}");
         }
 
-        void AppendToolset()
+        public void AppendSourceFiles(SourceDescriptor desc, bool Ext = false)
         {
-            ExtBuilder.AppendLine();
-            ExtBuilder.AppendLine($"# Toolset ({Project.Toolset.Name})");
-            ExtBuilder.AppendLine($"TOOLSETPATH={Program.Config.GetPath($"Toolset.{Project.Toolset.Name}")}");
-            foreach (var tool in Project.Toolset.Tools)
-            {
-                ExtBuilder.AppendLine($"{tool.Name}=$(TOOLSETPATH)/{tool.Binary}");
-            }
-        }
-
-        void AppendExtendedSources()
-        {
-            if (Program.Config.AdvSource.Count > 0)
-            {
-                Builder.AppendLine();
-                Builder.AppendLine("# Source files");
-                foreach (var src in Program.Config.AdvSource)
-                {
-                    Builder.AppendLine($"SRC += {src}");
-                }
-            }
-
-        }
-
-        void AppendSourceFiles(SourceDescriptor desc, bool Ext = false)
-        {
-            StringBuilder builder = Ext ? ExtBuilder : Builder;
+            StringBuilder builder = Ext ? ExternalBuilder : Builder;
 
             if (desc.SourceFiles != null)
             {
@@ -131,9 +118,9 @@ namespace Builder.Astralis.Generators
             }
         }
 
-        void AppendIncludes(SourceDescriptor desc, bool Ext = false)
+        public void AppendIncludes(SourceDescriptor desc, bool Ext = false)
         {
-            StringBuilder builder = Ext ? ExtBuilder : Builder;
+            StringBuilder builder = Ext ? ExternalBuilder : Builder;
 
             builder.AppendLine();
             builder.AppendLine($"# Include directories for {desc.Name}");
@@ -143,32 +130,9 @@ namespace Builder.Astralis.Generators
             }
         }
 
-        void AppendFramework()
-        {
-            AppendSourceFiles(Project.Framework, true);
-            AppendIncludes(Project.Framework, true);
-        }
-
-        void AppendDrivers()
-        {
-            foreach (var drv in Project.Drivers)
-            {
-                drv.Source.Used = true;
-                // TODO: load driver config?
-                //        AppendSourceFiles(drv.Source, true);
-                //       AppendIncludes(drv.Source, true);
-            }
-
-            foreach (var drv in Catalog.Drivers.Where(x => x.Used))
-            {
-                AppendSourceFiles(drv, true);
-                AppendIncludes(drv, true);
-            }
-
-        }
-
         void AppendLibraries()
         {
+            // TODO
             Builder.AppendLine();
             Builder.AppendLine("# Library flags");
             Builder.AppendLine("LDFLAGS=");
@@ -197,7 +161,7 @@ namespace Builder.Astralis.Generators
             if (d != null)
             {
                 var DirName = Catalog.ResolvePath(Path.Combine("gen", desc.Name));
-                ExtBuilder.AppendLine($"CFLAGS += -I{DirName}");
+                ExternalBuilder.AppendLine($"CFLAGS += -I{DirName}");
                 if (!Directory.Exists(DirName))
                     Directory.CreateDirectory(DirName);
 
@@ -212,7 +176,7 @@ namespace Builder.Astralis.Generators
 
         void AppendDefinitionsBlock(Descriptor desc, bool Ext = false)
         {
-            StringBuilder builder = Ext ? ExtBuilder : Builder;
+            StringBuilder builder = Ext ? ExternalBuilder : Builder;
 
             if (desc.Definitions != null)
             {
@@ -250,7 +214,7 @@ namespace Builder.Astralis.Generators
 
             if (UseExternalMakefile)
             {
-                File.WriteAllText($"{Project.Binary}.Tools.Makefile", ExtBuilder.ToString());
+                File.WriteAllText($"{Project.Binary}.Tools.Makefile", ExternalBuilder.ToString());
             }
         }
         #endregion

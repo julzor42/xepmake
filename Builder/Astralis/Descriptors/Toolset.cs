@@ -1,4 +1,5 @@
-﻿using Builder.Astralis.XUtils;
+﻿using Builder.Astralis.Generators;
+using Builder.Astralis.XUtils;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;

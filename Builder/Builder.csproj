@@ -50,6 +50,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Astralis\Blocks\DriverBlock.cs" />
+    <Compile Include="Astralis\Blocks\ExternalSourcesBlock.cs" />
+    <Compile Include="Astralis\Blocks\FrameworkBlock.cs" />
+    <Compile Include="Astralis\Blocks\ToolsetBlock.cs" />
     <Compile Include="Astralis\Catalog.cs" />
     <Compile Include="Astralis\Descriptors\Board.cs" />
     <Compile Include="Astralis\Descriptors\Connector.cs" />
@@ -65,6 +69,7 @@
     <Compile Include="Astralis\Execution\Make.cs" />
     <Compile Include="Astralis\Generators\HeaderGenerator.cs" />
     <Compile Include="Astralis\Generators\MakefileGenerator.cs" />
+    <Compile Include="Astralis\Blocks\IMakefileBlock.cs" />
     <Compile Include="Astralis\XUtils\ElementBased.cs" />
     <Compile Include="BuilderConfig.cs" />
     <Compile Include="Program.cs" />
